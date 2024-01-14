@@ -19,8 +19,10 @@ ws.on('open', () => {
 ws.on('message', (m) => {
   let diff = JSON.parse(m);
   console.log(`received diff: ${JSON.stringify(diff)}`);
+
   log.appendFile(JSON.stringify(diff) + '\n');
   db = apply(db, diff);
+  
   console.log(`new db state: ${JSON.stringify(db)}`);
   ws.send(JSON.stringify(db));
 });
