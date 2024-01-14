@@ -1,0 +1,16 @@
+{
+  "name": "hansel",
+  "version": "0.0.0",
+  "description": "Hansel is an databse which logs modifications to a fd.",
+  "main": "hansel.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "blottn",
+  "license": "ISC",
+  "dependencies": {
+    "json-merge-patch": "^1.0.2",
+    "ws": "^8.16.0"
+  }
+}
