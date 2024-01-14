@@ -1,21 +1,31 @@
+#!/usr/local/bin/node
+
 import { WebSocket } from 'ws'
 import { open, readFile } from 'fs/promises';
 import { apply } from 'json-merge-patch';
 
-let db = JSON.parse(await readFile('./db.json'));
-let log = await open('./diffs.jsonl', 'a');
+import { ArgumentParser } from 'argparse';
 
-// TODO let id be a flag
-let id = Math.floor(new Date().getTime() / 1000)
+let parser = new ArgumentParser();
 
-const url = `wss://wrm.blottn.ie/hansel/test`;
+parser.add_argument('--data-dir', {default: './data'});
+parser.add_argument('--ws-url', {default: 'wss://wrm.blottn.ie/hansel/test'});
+
+let { data_dir, ws_url } = parser.parse_args();
+
+// Open files
+let db = JSON.parse(await readFile(`${data_dir}/db.json`));
+let log = await open(`${data_dir}/diffs.jsonl`, 'a');
+
+// Initialise websocket
+const url = `${ws_url}`;
 const ws = new WebSocket(url);
-
 ws.on('error', console.error);
 ws.on('open', () => {
   console.log(`Connected to wss: ${url}`)
 });
 
+// handle diffs & persist db
 ws.on('message', (m) => {
   let diff = JSON.parse(m);
   console.log(`received diff: ${JSON.stringify(diff)}`);
