@@ -1,0 +1,9 @@
+services:
+  hansel:
+    image: hansel
+    build:
+      context: .
+    entrypoint:
+    - node
+    - /hansel/hansel.js
+    - --data-dir=/hansel/data
