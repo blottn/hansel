@@ -3,7 +3,7 @@
 import { WebSocket } from 'ws'
 import { open, readFile } from 'fs/promises';
 import { join } from 'path';
-import { apply } from 'json-merge-patch';
+import { apply } from 'json-patcher';
 
 import { ArgumentParser } from 'argparse';
 
@@ -25,6 +25,7 @@ const ws_in = new WebSocket(in_url);
 const ws_out = new WebSocket(out_url);
 ws_in.on('error', console.error);
 
+// Connect websockets
 (await Promise.all([new Promise((res) => {
   ws_out.on('open', () => {
     res(`Connected to ws_out: ${out_url}`);
@@ -50,7 +51,9 @@ ws_in.on('message', (m) => {
     log.appendFile(m + '\n');
     db = apply(db, diff);
     console.log(`new db state: ${JSON.stringify(db)}`);
-  } catch (e) {}
+  } catch (e) {
+    console.error(e);
+  }
   ws_out.send(JSON.stringify(db));
 });
 
